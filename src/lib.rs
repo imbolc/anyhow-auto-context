@@ -39,8 +39,6 @@ macro_rules! auto_context {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
-
     fn ensure_42(n: i32) -> anyhow::Result<()> {
         anyhow::ensure!(n == 42, "Expected 42");
         Ok(())
