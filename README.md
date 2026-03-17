@@ -52,15 +52,44 @@ Caused by:
     1: my error
 ```
 
+### With additional context
+
+The optional context arguments follow `format!` semantics and are evaluated only
+on the error path.
+
+```rust,no_run
+use anyhow::Result;
+use anyhow_auto_context::auto_context;
+
+fn main() -> Result<()> {
+    for i in 1..100 {
+        auto_context!(not_42(i), "i = {i}")?;
+    }
+    Ok(())
+}
+
+fn not_42(n: usize) -> Result<()> {
+    anyhow::ensure!(n != 42, "Unexpected 42");
+    Ok(())
+}
+```
+
+```sh
+$ cargo run --example context
+Error: not_42(i) in context::main at examples/context.rs:7:9 with i = 42
+
+Caused by:
+    Unexpected 42
+```
 
 ## Contributing
 
 - please run [.pre-commit.sh] before sending a PR, it will check everything
 
-
 ## License
 
 This project is licensed under the [MIT license][license].
 
-[.pre-commit.sh]: https://github.com/imbolc/anyhow-auto-context/blob/main/pre-commit.sh
+[.pre-commit.sh]:
+    https://github.com/imbolc/anyhow-auto-context/blob/main/.pre-commit.sh
 [license]: https://github.com/imbolc/anyhow-auto-context/blob/main/LICENSE
